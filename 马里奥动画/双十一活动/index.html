@@ -1,0 +1,297 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>无标题文档</title>
+		<link href="css/double_eleven.css" type="text/css" rel="stylesheet" />
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/jQueryRotate.2.2.js"></script>
+		<script src="js/jquery.easing.min.js"></script>
+		<script>
+			$(function() {
+					var checksubmit = true;
+					var timeOut = function() { //超时函数
+						$(".rotate-bg").rotate({
+							angle: 0,
+							duration: 10000,
+							animateTo: 2160, //这里是设置请求超时后返回的角度，所以应该还是回到最原始的位置，2160是因为我要让它转6圈，就是360*6得来的
+							callback: function() {
+								alert('网络超时');
+								checksubmit = true;
+							}
+						});
+					};
+					var rotateFunc = function(awards, angle, text) { //awards:奖项，angle:奖项对应的角度
+						$('.rotate-bg').stopRotate();
+						$(".rotate-bg").rotate({
+							angle: 0,
+							duration: 5000,
+							animateTo: angle + 1440, //angle是图片上各奖项对应的角度，1440是我要让指针旋转4圈。所以最后的结束的角度就是这样子^^
+							callback: function() {
+								content = '<div class="pop_box"><h3 class="title">' + text + '</h3>' +
+									'<div class="btnbox">' +
+									'<a href="/member/main" class="btn"><i>进入管理控制台</i></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="/" class="btn"><i>返回云通讯首页</i></a>' +
+									'</div></div>';
+								layer.open({
+									type: 1,
+									title: false,
+									shadeClose: false,
+									maxmin: false,
+									fix: false,
+									area: ['400px', '200px'],
+									content: content
+
+								});
+								checksubmit = true;
+							}
+						});
+					};
+
+					$("#lotteryBtn").rotate({
+						bind: {
+							click: function() {
+								rotateFunc("000", 100, "hhh")
+									/*	if(checksubmit){
+				checksubmit=false;
+				$.ajax({
+					type : "POST",
+					url : "/activity/toRotaryActivity?activityId=12",
+					data : "",
+					dataType : "json",
+					success : function(data) {
+						var content;
+						if(data.flag){
+							if(data.jiaodu){
+								rotateFunc('',data.jiaodu,'恭喜您抽中'+data.drawname);
+							}
+						}else{
+							 if(data.acType==10) {
+						       content='<div class="pop_box">'+
+						    	   '<h3 class="title">每位用户每天只能抽奖一次，您已参与抽奖并获得奖励。</h3>'+
+								'<div class="btnbox"><a href="/member/main" class="btn"><i>进入管理控制台</i></a>&nbsp;&nbsp;&nbsp;'+
+		    					'<a href="/" class="btn" ><i>返回云通讯首页</i></a></div></div>';
+								layer.open({
+									type : 1,
+									title: false,
+									shadeClose: false,
+									maxmin: false,
+									fix : false,  
+									area: ['400px', '200px'],                     
+									content: content
+
+								});
+								checksubmit=true;
+								return;
+							}
+							if(data.acType==5){
+								//活动已下架
+								content='<div class="pop_box">'+
+								'<h3 class="title">对不起，此活动已过期。</h3>'+
+		    					'<div class="btnbox"><a href="/" class="btn" ><i>返回云通讯首页</i></a></div>'+
+								'</div>';
+								layer.open({
+									type : 1,
+									title: false,
+									shadeClose: false,
+									maxmin: false,
+									fix : false,  
+									area: ['400px', '200px'],                     
+									content: content
+
+								});
+								checksubmit=true;
+								return;
+							}
+							if(data.acType==11){
+								//活动已下架
+								content='<div class="pop_box">'+
+						'<h3 class="title">您还未登录云通讯，请登录后购买</h3>'+
+    					'<div class="btnbox"><a href="/user/login" class="btn"><i>登录并购买</i></a></div>'+
+    					'<h3 class="title">还没有云通讯帐号，<a href="/user/reg/init" class="link">立即注册</a></h3>'+
+						'</div>';
+								layer.open({
+									type : 1,
+									title: false,
+									shadeClose: false,
+									maxmin: false,
+									fix : false,  
+									area: ['400px', '200px'],                     
+									content: content
+
+								});
+								checksubmit=true;
+								return;
+						   }
+							
+						}
+					}
+				});  
+			
+				}
+			*/
+							}
+						}
+
+					});
+
+				})
+				/*function getPrize(type){
+					$.ajax({
+						type : "POST",
+						url : "/activity/getPrize",
+						data : {type:type},
+						dataType : "json",
+						success : function(data) {
+							 var content;
+							if(data.flag==false){
+								if(data.msgType!==null){
+									if(data.acType=="10"){
+										content='<div class="pop_box">'+
+										'<h3 class="title">您还未登录云通讯，请登录后购买</h3>'+
+				    					'<div class="btnbox"><a href="/user/login" class="btn"><i>登录并购买</i></a></div>'+
+				    					'<h3 class="title">还没有云通讯帐号，<a href="/user/reg/init" class="link">立即注册</a></h3>'+
+										'</div>';
+									}else if(data.acType=="4"){
+										content='<div class="pop_box">'+
+										'<h3 class="title pt">对不起，您没有符合此条件的充值记录'+
+										'</div>';
+									}else if(data.acType=="1"){
+										content='<div class="pop_box">'+
+										'<h3 class="title pt">对不起，您已经领取过该奖品。</h3>'+
+				    					'<div class="btnbox"><a href="/" class="btn" ><i>返回云通讯首页</i></a></div>'+
+										'</div>';
+									}else if(data.acType=="5"){
+										//活动已下架
+										content='<div class="pop_box">'+
+										'<h3 class="title pt">对不起，此活动已过期。</h3>'+
+				    					'<div class="btnbox"><a href="/" class="btn" ><i>返回云通讯首页</i></a></div>'+
+										'</div>';
+									}
+									layer.open({
+										type : 1,
+										title: false,
+										shadeClose: false,
+										maxmin: false,
+										fix : false,  
+										area: ['400px', '180px'],                     
+										content: content
+									});
+									
+								}
+							}else{
+								layer.open({
+									type : 2,
+									title: false,
+									shade:[0.8, '#393D49'],
+									shadeClose: false,
+									maxmin: false,
+									fix : true,  
+									area: ['650px', '620px'],  
+									content: '/activity/toAddFlow?rechargeId='+data.rechargeId+'&type='+data.type+"&flowUserId="+data.flowUserId
+								});
+							}
+							
+						}
+					}); 
+				}
+				*/
+		</script>
+	</head>
+
+	<body>
+		<div class="main">
+			<div class="eleven_banner"></div>
+			<div class="eleven_content">
+				<div class="eleven_info">
+					<div class="ly-plate">
+						<div class="rotate-bg"></div>
+						<div class="lottery-star"><img src="images/rotate-static.png" id="lotteryBtn"></div>
+						<p class="eleven_tips">每天可抽奖一次，抽中的金额直接增加至您的账户余额中</p>
+					</div>
+					<div class="content">
+						<div class="line_t"><span class="title">活动时间</span></div>
+						<div class="imgbox"><img src="images/eleven_img1.jpg" alt="" /></div>
+						<div class="line_t"><span class="title">活动规则</span></div>
+						<p class="step" style="padding-top:10px;">①&nbsp;活动对象：</p>
+						<p class="activity_con">容联云通讯所有注册用户。</p>
+						<p class="step">②&nbsp;活动礼品：</p>
+						<p class="activity_con">1-1111元红包随机抽，立即到账。</p>
+						<p class="step">③&nbsp;参与方式：</p>
+						<p class="activity_con">活动期间，云通讯平台所有注册用户每日均有一次抽奖机会，<br/>100%中奖。</p>
+						<p class="step">③&nbsp;赠送规则：</p>
+						<p class="activity_con">抽取的红包，会及时发放至您的注册账户。赠送资源0门槛使用且<br/>长期有效。如1个工作日后仍未收到，请联系客服。</p>
+						<a href="#" class="detail_btn">活动详情&gt;&gt;</a>
+					</div>
+				</div>
+			</div>
+			<div class="curve"></div>
+			<div class="cz_total">
+				<div class="presentbox">
+					<h2 class="present_t"></h2>
+					<ul class="presentlist">
+						<li class="l1">
+							<a href="http://bbs.yuntongxun.com/forum.php?mod=post&action=edit&fid=29&tid=2488&pid=8528" class="link" target="_blank"></a>
+							<p class="con">单次充值达到2000元，即可获得移动电源或军刀数据线（二选一）+500M手机流量
+								<a href="javascript:void(0)" class="present">领取实物</a>
+							</p>
+						</li>
+						<li class="l2">
+							<a href="http://bbs.yuntongxun.com/forum.php?mod=post&action=edit&fid=29&tid=2488&pid=8528" class="link" target="_blank"></a>
+							<p class="con">单次充值达到5000元，即可获得无线路由器或双肩背包（二选一）+500M手机流量
+								<a href="javascript:void(0)" class="present">领取实物</a>
+							</p>
+						</li>
+						<li class="l3">
+							<a href="http://bbs.yuntongxun.com/forum.php?mod=post&action=edit&fid=29&tid=2488&pid=8528" class="link" target="_blank"></a>
+							<p class="con">单次充值达到10000元，即可获得炫光键盘、鼠标套装或幻想小吉创意音响（二选一）+500M手机流量
+								<a href="javascript:void(0)" class="present">领取实物</a>
+							</p>
+						</li>
+					</ul>
+					<div class="czbox">
+						<a href="#" class="cz_btn">立即充值</a>
+					</div>
+				</div>
+				<div class="present_info">
+					<span><span class="name">活动说明<div></div></span>
+					<p class="rule_line" style="margin-top: 30px;"><span class="name">1、活动时间：</span>2016-10-24至2016-11-14；</p>
+					<p class="rule_line"><span class="name">2、活动对象：</span>容联云通讯网站注册用户；</p>
+					<p class="rule_line"><span class="name">3、礼品领取规则：</span>单次充值达到标准，即可领取对应档位礼品，活动期间最多可领取三次；</p>
+					<p class="rule_line"><span class="name">4、实物礼品领取：</span>成功充值后，请回到该界面点击奖品下对应的"领取实物"链接，按提示选择奖品并填写邮寄信息
+					</p>
+					<p class="rule_line" style="margin-left: 118px;"> 否则视为放弃奖品；礼品活动结束后统一发送；</p>
+					<p class="rule_line"><span class="name">5、流量礼品领取：</span>受流量月末清零影响，所有用户获赠的手机流量将于活动结束后三个工作日内充值到您实物领取时填写的手机号；</p>
+					<p class="rule_line  colorb">6、在法律允许的范围内，此次活动最终解释权归容联云通讯所有。
+						</>
+						<p class="detail_con">
+							<a href="http://bbs.yuntongxun.com/forum.php?mod=post&action=edit&fid=17&tid=2487&pid=8525" class="detail_link" target="_blank">活动详情&gt;&gt;</a>
+						</p>
+				</div>
+				<div class="codebox">
+					<div class="codeimg"><img src="images/eleven_img5.jpg" alt="" /></div>
+				</div>
+			</div>
+		</div>
+		<div class="alertbox" style="display:none;">
+			<h3 class="closebox"><a href="#" class="close_btn">关闭</a></h3>
+			<!-- 未登录
+    <h3 class="title">您还未登陆云通讯，请先登陆或注册</h3>
+    <div class="btnbox"><a href="#" class="btn"><i>&nbsp;&nbsp;&nbsp;&nbsp;登陆&nbsp;&nbsp;&nbsp;&nbsp;</i></a></div>
+    <h3 class="title">还没有云通讯账号，<a href="#" class="zc_btn">立即注册</a></h3> -->
+			<!-- 领取成功
+    <h3 class="title">恭喜！您获得了XXX条短信，价值XXX元</h3>
+    <div class="btnbox">
+    	<a href="#" class="btn"><i>进入管理控制台</i></a>
+        <a href="#" class="btn"><i>返回云通讯首页</i></a>
+    </div> -->
+			<!-- 多次领取
+    <h3 class="title">每位用户只能抽奖一次，您已参与抽奖并获得奖励。</h3>
+    <div class="btnbox">
+    	<a href="#" class="btn"><i>进入管理控制台</i></a>
+        <a href="#" class="btn"><i>返回云通讯首页</i></a>
+    </div> -->
+		</div>
+	</body>
+
+</html>
