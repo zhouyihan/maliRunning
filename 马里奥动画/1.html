@@ -1,0 +1,196 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>无标题文档</title>
+		<style type="text/css">
+			img {
+				outline-width: 0px;
+				vertical-align: top;
+			}
+			
+			#bg {
+				width: 290px;
+				height: 454px;
+				position: absolute;
+				top: 200px;
+				left: 200px;
+			}
+			
+			#role1,
+			#role2 {
+				width: 37px;
+				height: 72px;
+			}
+			
+			#role2 {
+				width: 37px;
+				height: 55px;
+			}
+		</style>
+		<script type="text/javascript" src="jquery-1.8.0.min.js"></script>
+		<script type="text/javascript" src="jquery.easing.min.js"></script>
+		<script type="text/javascript" src="jquery.roatet.js"></script>
+
+	</head>
+
+	<body>
+		<div id="bg"><img src="10.png" width="290" height="453" alt="" /></div>
+
+		<script>
+			var startx
+			var starty
+			var x
+			var y
+			var x1
+			var y1
+			var startdely = 0
+
+			$(document).ready(function() {
+
+				//初始座标
+				startx = $("#bg").position().left
+				starty = $("#bg").position().top
+				x = startx
+				y = starty
+				x1 = x
+				y1 = x
+
+				$("#bg").after("<div id='role1'><img src='123-1.gif' width='37' height='72' ></div>")
+				$("#bg").after("<div id='role2'><img src='123-2.gif' width='37' height='55' ></div>")
+
+				var role1_x = x
+				var role1_y = y - 72
+				$("#role1").css({
+					"position": "absolute",
+					"top": role1_y + "px",
+					"left": role1_x + "px"
+				});
+
+				var role2_x = x + 100
+				var role2_y = y - 55
+				$("#role2").css({
+					"position": "absolute",
+					"top": role2_y + "px",
+					"left": role2_x + "px"
+				});
+
+				step()
+				step2()
+			});
+
+			function step() {
+
+				x = x + 290 + 12
+				y = y - 55
+				$("#role2").animate({
+					left: x + 'px'
+				}, 800 + startdely, 'linear', function() {
+					$(this).rotate({
+						angle: 90
+					})
+				});
+
+				y = y + 454 + 55
+				$("#role2").animate({
+					top: y + "px"
+				}, 2000, 'linear', function() {
+					$(this).rotate({
+						angle: 180
+					})
+				});
+
+				x = x - 290 - 37 - 24
+				$("#role2").animate({
+					left: x + "px"
+				}, 2000, 'linear', function() {
+					$(this).rotate({
+						angle: 270
+					})
+				});
+				//break;	
+
+				y = y - 454 - 55
+				$("#role2").animate({
+					top: y + "px"
+				}, 2000, 'linear', function() {
+					$(this).rotate({
+						angle: 0
+					})
+				});
+
+				if(x == startx - 37 - 12 && y == starty - 55) {
+					x = startx;
+					y = starty;
+					startdely = 1200
+					addTask(step, 300)
+				}
+
+			}
+
+			//var fn2 = f2;
+
+			function step2() {
+
+				x1 = x1 + 290 + 20
+				y1 = y1 - 72
+				$("#role1").animate({
+					left: x1 + 'px'
+				}, 2000, 'linear', function() {
+					$(this).rotate({
+						angle: 90
+					})
+				});
+
+				y1 = y1 + 454 + 72
+				$("#role1").animate({
+					top: y1 + "px"
+				}, 2000, 'linear', function() {
+					$(this).rotate({
+						angle: 180
+					})
+				});
+
+				x1 = x1 - 290 - 37 - 40
+				$("#role1").animate({
+					left: x1 + "px"
+				}, 2000, 'linear', function() {
+					$(this).rotate({
+						angle: 270
+					})
+				});
+				//break;	
+
+				y1 = y1 - 454 - 72
+				$("#role1").animate({
+					top: y1 + "px"
+				}, 2000, 'linear', function() {
+					$(this).rotate({
+						angle: 0
+					})
+				});
+
+				if(x1 == startx - 37 - 20 && y1 == starty - 72) {
+					x1 = startx;
+					y1 = starty;
+					addTask(step2, 300)
+				}
+
+				//role1_animate(0)
+			}
+
+			function addTask(fun, delay) {
+				if(typeof fun == 'function') {
+					var argu = Array.prototype.slice.call(arguments, 2);
+					var f = (function() {
+						fun.apply(null, argu);
+					});
+					return window.setTimeout(f, delay);
+				}
+				return window.setTimeout(fun, delay);
+			}
+		</script>
+	</body>
+
+</html>
